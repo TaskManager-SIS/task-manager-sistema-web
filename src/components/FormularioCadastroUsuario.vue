@@ -19,7 +19,7 @@
             <input type="password" class="form-control" id="confirmar-senha" name="confirmar-senha"
                 v-model="confirmar_senha" placeholder="Confirme a sua senha">
         </div>
-        <div class="input-container">
+        <div class="button-container">
             <button class="btn-registrar" type="submit">REGISTRAR</button>
         </div>
     </form>
@@ -36,10 +36,15 @@ export default {
 <style scoped>
 .formulario-cadastro-usuario {
     background-color: #fff;
-    padding: 30px;
+    padding: 20px;
     border-radius: 4px;
     max-width: 400px;
     margin: 0 auto;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .input-container {
@@ -71,8 +76,10 @@ input {
 }
 
 @media only screen and (max-width: 500px) {
-    .cadastro-usuario {
-        width: 80%;
+    .formulario-cadastro-usuario {
+        width: 90%;
+        padding: 20px;
     }
 }
+
 </style>

@@ -1,19 +1,11 @@
 <template>
-  <Navbar />
-  <FormularioCadastroUsuario />
+  <router-view />
 </template>
 
 <script>
 
-import FormularioCadastroUsuario from '@/components/FormularioCadastroUsuario.vue';
-import Navbar from '@/components/Navbar.vue';
-
 export default {
-  name: "CadastroUsuario",
-  components: {
-    Navbar,
-    FormularioCadastroUsuario
-  }
+  name: 'App',
 }
 
 </script>
@@ -21,8 +13,8 @@ export default {
 <style>
 
 #app {
-  font-family: Roboto;
   background-color: #DAFDBA;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   height: 100vh;
 }
 
