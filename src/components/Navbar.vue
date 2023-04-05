@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-lg">
         <router-link to="" class="navbar-brand align-middle link-logo">
-            <img src="../assets/img/task-manager-logo.png" width="30" height="30" class="d-inline-block align-top">
+            <img :src="logo" :alt="alt" width="30" height="30" class="d-inline-block align-top">
             Task Manager
         </router-link>
         <form class="form-inline">
@@ -19,6 +19,11 @@
 
 export default {
     name: "Navbar",
+    data() {
+        return {
+            logo: '/task-manager-logo.png'
+        }
+    }
 }
 
 </script>

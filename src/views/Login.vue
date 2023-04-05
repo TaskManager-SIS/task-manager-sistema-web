@@ -2,7 +2,7 @@
     <div class="login">
         <div class="container form-logo align-middle">
             <div class="logo-nome mb-2">
-                <img src="../assets/img/task-manager-logo.png" width="50" height="50"
+                <img :src="logo" :alt="alt" width="50" height="50"
                     class="logo-tm d-inline-block align-top align-middle">
                 <span class="nome-tm align-middle">Task<span class="manager">Manager</span></span>
             </div>
@@ -31,7 +31,12 @@
 <script>
 
 export default {
-    name: 'Login'
+    name: 'Login',
+    data() {
+        return {
+            logo: '/assets/img/task-manager-logo.png'
+        }
+    }
 }
 
 </script>

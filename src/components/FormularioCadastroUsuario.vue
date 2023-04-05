@@ -1,34 +1,67 @@
 <template>
-    <form class="formulario-cadastro-usuario my-5">
+    <form class="formulario-cadastro-usuario my-5" @submit.prevent="cadastrarUsuario">
         <div class="input-container">
             <label for="nome">Nome</label>
-            <input type="text" class="form-control" id="nome" name="name" v-model="nome" placeholder="Digite o seu nome">
+            <input type="text" class="form-control" id="nome" name="nome" v-model="state.nome" placeholder="Digite o seu nome">
         </div>
         <div class="input-container">
             <label for="email">E-mail</label>
-            <input type="email" class="form-control" id="email" name="email" v-model="email"
+            <input type="email" class="form-control" id="email" name="email" v-model="state.email"
                 placeholder="Digite o seu email">
         </div>
         <div class="input-container">
             <label for="senha">Senha</label>
-            <input type="password" class="form-control" id="senha" name="senha" v-model="senha"
+            <input type="password" class="form-control" id="senha" name="senha" v-model="state.senha"
                 placeholder="Digite a sua senha">
         </div>
         <div class="input-container">
             <label for="confirmar-senha">Confirmar senha</label>
             <input type="password" class="form-control" id="confirmar-senha" name="confirmar-senha"
-                v-model="confirmar_senha" placeholder="Confirme a sua senha">
+                v-model="state.confirmar_senha" placeholder="Confirme a sua senha">
         </div>
         <div class="button-container">
-            <button class="btn-registrar" type="submit">REGISTRAR</button>
+            <input class="btn-registrar" type="submit" value="REGISTRAR">
         </div>
     </form>
-</template>
+</template>  
 
 <script>
 
+import { reactive } from 'vue'
+import axios from 'axios'
+import api from '@/services/api';
+
 export default {
-    name: 'FormularioCadastroUsuario'
+    setup() {
+        const state = reactive({
+            nome: '',
+            email: '',
+            senha: ''
+        })
+
+        async function cadastrarUsuario() {
+            const url = 'https://www.taskmanager.targetbr.biz/index.php/usuario'
+
+            let data = {
+                nome: this.state.nome,
+                email: this.state.email,
+                senha: this.state.senha
+            }
+
+            data = JSON.stringify(data)
+
+            console.log(data)
+
+            try {
+                const response = await axios.post(url, data)
+                console.log(response.data)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        return { state, cadastrarUsuario }
+    }
 }
 
 </script>
@@ -81,5 +114,4 @@ input {
         padding: 20px;
     }
 }
-
 </style>
