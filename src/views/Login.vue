@@ -13,7 +13,7 @@
                 <p class="logo-type align-middle" id="task-manager">Task <span style="color: #fff">Manager</span></p>
             </div>
 
-            <form class="login-form mb-5">
+            <form class="login-form mb-5" method="POST">
                 <div class="input-container">
                     <label for="email">E-mail</label>
                     <input type="email" class="form-control" id="email" name="email" v-model="email"
@@ -27,7 +27,7 @@
                 </div>
 
                 <div class="input-container">
-                    <button class="btn-entrar" type="submit">ENTRAR</button>
+                    <button type="submit" class="btn-entrar">ENTRAR</button>
                 </div>
                 <span class="cadastre-se">
                     <router-link to="/cadastroUsuario" class="link-cadastro">

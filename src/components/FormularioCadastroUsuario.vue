@@ -1,36 +1,42 @@
 <template>
-    <form class="formulario-cadastro-usuario my-5">
+    <form class="formulario-cadastro-usuario my-5" 
+          method="POST" onsubmit="cadastrarUsuario()">
         <div class="input-container">
-            <label for="nome">Nome</label>
-            <input type="text" class="form-control" id="nome" name="name" v-model="nome" placeholder="Digite o seu nome">
+            <label for="nome" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="nome" name="nome" v-model="nome" 
+                   placeholder="Digite o seu nome" required />
         </div>
         <div class="input-container">
-            <label for="email">E-mail</label>
+            <label for="email" class="form-label">E-mail</label>
             <input type="email" class="form-control" id="email" name="email" v-model="email"
-                placeholder="Digite o seu email">
+                   placeholder="Digite o seu email" required />
         </div>
         <div class="input-container">
-            <label for="senha">Senha</label>
+            <label for="senha" class="form-label">Senha</label>
             <input type="password" class="form-control" id="senha" name="senha" v-model="senha"
-                placeholder="Digite a sua senha">
+                   placeholder="Digite a sua senha" required />
         </div>
+
+        <!--
         <div class="input-container">
             <label for="confirmar-senha">Confirmar senha</label>
             <input type="password" class="form-control" id="confirmar-senha" name="confirmar-senha"
-                v-model="confirmar_senha" placeholder="Confirme a sua senha">
+                   v-model="confirmar_senha" placeholder="Confirme a sua senha" required />
         </div>
+        -->
+
         <div class="button-container">
-            <button class="btn-registrar" type="submit">REGISTRAR</button>
+            <button type="submit" class="btn-registrar">REGISTRAR</button>
         </div>
     </form>
 </template>
 
+
+
 <script>
-
-export default {
-    name: 'FormularioCadastroUsuario'
-}
-
+    export default {
+        name: 'FormularioCadastroUsuario',
+    }
 </script>
 
 <style scoped>
