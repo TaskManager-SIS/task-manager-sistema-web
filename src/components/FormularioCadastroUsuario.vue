@@ -1,8 +1,12 @@
 <template>
+    <div class="container-fluid mensagem">
+        <Mensagem :msg="state.msg" v-if="state.msg != ''" />
+    </div>
     <form class="formulario-cadastro-usuario my-5" @submit.prevent="cadastrarUsuario">
         <div class="input-container">
             <label for="nome">Nome</label>
-            <input type="text" class="form-control" id="nome" name="nome" v-model="state.nome" placeholder="Digite o seu nome">
+            <input type="text" class="form-control" id="nome" name="nome" v-model="state.nome"
+                placeholder="Digite o seu nome">
         </div>
         <div class="input-container">
             <label for="email">E-mail</label>
@@ -29,44 +33,69 @@
 
 import { reactive } from 'vue'
 import axios from 'axios'
-import api from '@/services/api';
+import Mensagem from './Mensagem.vue';
 
 export default {
+    name: "FormularioCadastroUsuario",
+    components: {
+        Mensagem
+    },
     setup() {
         const state = reactive({
-            nome: '',
-            email: '',
-            senha: ''
-        })
+            nome: "",
+            email: "",
+            senha: "",
+            confirmar_senha: "",
+            msg: ""
+        });
 
         async function cadastrarUsuario() {
-            const url = 'https://www.taskmanager.targetbr.biz/index.php/usuario'
-
+            const url = "https://www.taskmanager.targetbr.biz/index.php/usuario";
             let data = {
                 nome: this.state.nome,
                 email: this.state.email,
-                senha: this.state.senha
+                senha: this.state.senha,
+                confirmar_senha: this.state.confirmar_senha,
+                msg: this.state.msg
+            };
+
+            if (this.state.senha == this.state.confirmar_senha) {
+
+                data = JSON.stringify(data);
+
+                try {
+                    const response = await axios.post(url, data);
+                    console.log(response.data.msg);
+                    this.state.msg = response.data.msg;
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            } else {
+                this.state.msg = "As senhas não coincidem!"
             }
 
-            data = JSON.stringify(data)
-
-            console.log(data)
-
-            try {
-                const response = await axios.post(url, data)
-                console.log(response.data)
-            } catch (error) {
-                console.error(error)
-            }
+            this.state.nome = ""
+            this.state.email = ""
+            this.state.senha = ""
+            this.state.confirmar_senha = ""
+            setTimeout(() => this.state.msg = "", 3000)
         }
 
-        return { state, cadastrarUsuario }
+        return { state, cadastrarUsuario };
     }
 }
 
 </script>
 
 <style scoped>
+.mensagem {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: right;
+}
+
 .formulario-cadastro-usuario {
     background-color: #fff;
     padding: 20px;
@@ -112,6 +141,14 @@ input {
     .formulario-cadastro-usuario {
         width: 90%;
         padding: 20px;
+    }
+
+    .mensagem {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
     }
 }
 </style>
