@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid mensagem">
-        <Mensagem :msg="state.msg" v-if="state.msg != ''" />
+        <Mensagem :msg="state.msg" v-show="state.msg != ''"/>
     </div>
     <form class="formulario-cadastro-usuario my-5" @submit.prevent="cadastrarUsuario">
         <div class="input-container">
@@ -46,7 +46,8 @@ export default {
             email: "",
             senha: "",
             confirmar_senha: "",
-            msg: ""
+            msg: "",
+            dados: ""
         });
 
         async function cadastrarUsuario() {
@@ -56,19 +57,17 @@ export default {
                 email: this.state.email,
                 senha: this.state.senha,
                 confirmar_senha: this.state.confirmar_senha,
-                msg: this.state.msg
+                msg: this.state.msg,
+                dados: this.state.dados
             };
 
+            data = JSON.stringify(data);
+
             if (this.state.senha == this.state.confirmar_senha) {
-
-                data = JSON.stringify(data);
-
                 try {
                     const response = await axios.post(url, data);
-                    console.log(response.data.msg);
                     this.state.msg = response.data.msg;
-                }
-                catch (error) {
+                } catch (error) {
                     console.error(error);
                 }
             } else {
