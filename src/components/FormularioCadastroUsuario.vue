@@ -1,27 +1,32 @@
 <template>
     <div class="container-fluid mensagem">
-        <Mensagem :msg="state.msg" v-show="state.msg != ''"/>
+        <Mensagem :msg="msg" :condicao="condicao" v-show="this.msg != ''"
+            :class="{ 'background-green': condicao, 'background-red': !condicao }" />
     </div>
     <form class="formulario-cadastro-usuario my-5" @submit.prevent="cadastrarUsuario">
         <div class="input-container">
-            <label for="nome">Nome</label>
-            <input type="text" class="form-control" id="nome" name="nome" v-model="state.nome"
-                placeholder="Digite o seu nome">
+            <label for="nome">Nome<span class="campo-obrigatorio"> * </span></label>
+            <input type="text" class="form-control" id="nome" name="nome" v-model="usuario.nome"
+                placeholder="Digite o seu nome" required>
+            <small v-if="errors.nome" class="form-text texto-validacao">{{ errors.nome }}</small>
         </div>
         <div class="input-container">
-            <label for="email">E-mail</label>
-            <input type="email" class="form-control" id="email" name="email" v-model="state.email"
-                placeholder="Digite o seu email">
+            <label for="email">E-mail<span class="campo-obrigatorio"> * </span></label>
+            <input type="" class="form-control" id="email" name="email" v-model="usuario.email"
+                placeholder="Digite o seu email" required>
+            <small v-if="errors.email" class="form-text texto-validacao">{{ errors.email }}</small>
         </div>
         <div class="input-container">
-            <label for="senha">Senha</label>
-            <input type="password" class="form-control" id="senha" name="senha" v-model="state.senha"
-                placeholder="Digite a sua senha">
+            <label for="senha">Senha<span class="campo-obrigatorio"> * </span></label>
+            <input type="password" class="form-control" id="senha" name="senha" v-model="usuario.senha"
+                placeholder="Digite a sua senha" required>
+            <small v-if="errors.senha" class="form-text texto-validacao">{{ errors.senha }}</small>
         </div>
         <div class="input-container">
-            <label for="confirmar-senha">Confirmar senha</label>
+            <label for="confirmar-senha">Confirmar senha<span class="campo-obrigatorio"> * </span></label>
             <input type="password" class="form-control" id="confirmar-senha" name="confirmar-senha"
-                v-model="state.confirmar_senha" placeholder="Confirme a sua senha">
+                v-model="usuario.confirmar_senha" placeholder="Confirme a sua senha" required>
+            <small v-if="errors.confirmar_senha" class="form-text texto-validacao">{{ errors.confirmar_senha }}</small>
         </div>
         <div class="button-container">
             <input class="btn-registrar" type="submit" value="REGISTRAR">
@@ -31,58 +36,78 @@
 
 <script>
 
-import { reactive } from 'vue'
 import axios from 'axios'
-import Mensagem from './Mensagem.vue';
+import Mensagem from './Mensagem.vue'
 
 export default {
     name: "FormularioCadastroUsuario",
     components: {
         Mensagem
     },
-    setup() {
-        const state = reactive({
-            nome: "",
-            email: "",
-            senha: "",
-            confirmar_senha: "",
+    data() {
+        return {
+            usuario: {
+                nome: "",
+                email: "",
+                senha: "",
+                confirmar_senha: ""
+            },
+            errors: {
+                nome: "",
+                email: "",
+                senha: "",
+                confirmar_senha: "",
+            },
             msg: "",
-            dados: ""
-        });
-
-        async function cadastrarUsuario() {
-            const url = "https://www.taskmanager.targetbr.biz/index.php/usuario";
-            let data = {
-                nome: this.state.nome,
-                email: this.state.email,
-                senha: this.state.senha,
-                confirmar_senha: this.state.confirmar_senha,
-                msg: this.state.msg,
-                dados: this.state.dados
-            };
-
-            data = JSON.stringify(data);
-
-            if (this.state.senha == this.state.confirmar_senha) {
-                try {
-                    const response = await axios.post(url, data);
-                    this.state.msg = response.data.msg;
-                } catch (error) {
-                    console.error(error);
-                }
-            } else {
-                this.state.msg = "As senhas não coincidem!"
-            }
-
-            this.state.nome = ""
-            this.state.email = ""
-            this.state.senha = ""
-            this.state.confirmar_senha = ""
-            setTimeout(() => this.state.msg = "", 3000)
+            condicao: ""
         }
+    },
+    methods: {
+        cadastrarUsuario() {
+            axios.post("https://www.taskmanager.targetbr.biz/index.php/usuario", JSON.stringify(this.usuario))
+                .then(res => {
+                    this.errors.nome = ""
+                    this.errors.email = ""
+                    this.errors.senha = ""
+                    this.errors.confirmar_senha = ""
+                    this.msg = res.data.msg
 
-        return { state, cadastrarUsuario };
-    }
+                    if (res.data.dados === null) {
+                        this.condicao = false
+                    } else {
+                        this.condicao = true
+                    }
+                })
+                .then(res => {
+                    if (this.usuario.nome === "") {
+                        this.errors.nome = "Nome é obrigatório"
+                    }
+
+                    if (this.usuario.senha === "") {
+                        this.errors.senha = "Senha é obrigatória"
+                    }
+
+                    if (this.usuario.confirmar_senha === "") {
+                        this.errors.confirmar_senha = "Confirmação da senha é obrigatória"
+                    }
+
+                    if (this.usuario.email === "") {
+                        this.errors.email = "Email é obrigatório"
+                    } else if (!this.validarEmail(this.usuario.email)) {
+                        this.errors.email = "Email inválido"
+                    }
+
+                    if (this.usuario.senha != this.usuario.confirmar_senha) {
+                        this.errors.confirmar_senha = "As senhas não coincidem"
+                    }
+                })
+                .catch(error => console.error(error))
+        },
+        validarEmail(email) {
+            var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        }
+    },
 }
 
 </script>
@@ -95,12 +120,25 @@ export default {
     align-items: right;
 }
 
+.texto-validacao,
+.campo-obrigatorio {
+    color: red;
+}
+
 .formulario-cadastro-usuario {
     background-color: #fff;
     padding: 20px;
     border-radius: 4px;
     max-width: 400px;
     margin: 0 auto;
+}
+
+.background-green {
+    background-color: green;
+}
+
+.background-red {
+    background-color: red;
 }
 
 .button-container {
