@@ -7,25 +7,25 @@
         <div class="input-container">
             <label for="nome">Nome<span class="campo-obrigatorio"> * </span></label>
             <input type="text" class="form-control" id="nome" name="nome" v-model="usuario.nome"
-                placeholder="Digite o seu nome" required>
+                placeholder="Digite o seu nome">
             <small v-if="errors.nome" class="form-text texto-validacao">{{ errors.nome }}</small>
         </div>
         <div class="input-container">
             <label for="email">E-mail<span class="campo-obrigatorio"> * </span></label>
             <input type="" class="form-control" id="email" name="email" v-model="usuario.email"
-                placeholder="Digite o seu email" required>
+                placeholder="Digite o seu email">
             <small v-if="errors.email" class="form-text texto-validacao">{{ errors.email }}</small>
         </div>
         <div class="input-container">
             <label for="senha">Senha<span class="campo-obrigatorio"> * </span></label>
             <input type="password" class="form-control" id="senha" name="senha" v-model="usuario.senha"
-                placeholder="Digite a sua senha" required>
+                placeholder="Digite a sua senha">
             <small v-if="errors.senha" class="form-text texto-validacao">{{ errors.senha }}</small>
         </div>
         <div class="input-container">
             <label for="confirmar-senha">Confirmar senha<span class="campo-obrigatorio"> * </span></label>
             <input type="password" class="form-control" id="confirmar-senha" name="confirmar-senha"
-                v-model="usuario.confirmar_senha" placeholder="Confirme a sua senha" required>
+                v-model="usuario.confirmar_senha" placeholder="Confirme a sua senha">
             <small v-if="errors.confirmar_senha" class="form-text texto-validacao">{{ errors.confirmar_senha }}</small>
         </div>
         <div class="button-container">
@@ -63,45 +63,50 @@ export default {
         }
     },
     methods: {
+        validarCampos() {
+            this.errors = {}; 
+
+            if (!this.usuario.nome) {
+                this.errors.nome = "Informe seu nome";
+            }
+
+            if (!this.usuario.email) {
+                this.errors.email = "Informe seu e-mail";
+            } else if (!this.validarEmail(this.usuario.email)) {
+                this.errors.email = "Informe seu e-mail válido";
+            }
+
+            if (!this.usuario.senha) {
+                this.errors.senha = "Informe sua senha";
+            }
+
+            if (!this.usuario.confirmar_senha) {
+                this.errors.confirmar_senha = "Digite novamente sua senha";
+            }
+
+            if (this.usuario.senha !== this.usuario.confirmar_senha) {
+                this.errors.confirmar_senha = "As senhas não coincidem";
+            }
+
+            return Object.keys(this.errors).length === 0;
+        },
         cadastrarUsuario() {
-            axios.post("https://www.taskmanager.targetbr.biz/index.php/usuario", JSON.stringify(this.usuario))
-                .then(res => {
-                    this.errors.nome = ""
-                    this.errors.email = ""
-                    this.errors.senha = ""
-                    this.errors.confirmar_senha = ""
-                    this.msg = res.data.msg
+            if (this.validarCampos()) {
+                axios.post("https://www.taskmanager.targetbr.biz/index.php/usuario", JSON.stringify(this.usuario))
+                    .then(res => {
+                        this.errors.nome = ""
+                        this.errors.email = ""
+                        this.errors.senha = ""
+                        this.errors.confirmar_senha = ""
+                        this.msg = res.data.msg
 
-                    if (res.data.dados === null) {
-                        this.condicao = false
-                    } else {
-                        this.condicao = true
-                    }
-                })
-                .then(res => {
-                    if (this.usuario.nome === "") {
-                        this.errors.nome = "Nome é obrigatório"
-                    }
-
-                    if (this.usuario.senha === "") {
-                        this.errors.senha = "Senha é obrigatória"
-                    }
-
-                    if (this.usuario.confirmar_senha === "") {
-                        this.errors.confirmar_senha = "Confirmação da senha é obrigatória"
-                    }
-
-                    if (this.usuario.email === "") {
-                        this.errors.email = "Email é obrigatório"
-                    } else if (!this.validarEmail(this.usuario.email)) {
-                        this.errors.email = "Email inválido"
-                    }
-
-                    if (this.usuario.senha != this.usuario.confirmar_senha) {
-                        this.errors.confirmar_senha = "As senhas não coincidem"
-                    }
-                })
-                .catch(error => console.error(error))
+                        if (res.data.dados === null) {
+                            this.condicao = false
+                        } else {
+                            this.condicao = true
+                        }
+                    })
+            }
         },
         validarEmail(email) {
             var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -134,11 +139,11 @@ export default {
 }
 
 .background-green {
-    background-color: green;
+    background-color: #2ECC71;
 }
 
 .background-red {
-    background-color: red;
+    background-color: #E74C3C;
 }
 
 .button-container {
