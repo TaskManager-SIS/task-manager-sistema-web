@@ -64,7 +64,7 @@ export default {
     },
     methods: {
         validarCampos() {
-            this.errors = {}; 
+            this.errors = {};
 
             if (!this.usuario.nome) {
                 this.errors.nome = "Informe seu nome";
@@ -94,10 +94,7 @@ export default {
             if (this.validarCampos()) {
                 axios.post("https://www.taskmanager.targetbr.biz/index.php/usuario", JSON.stringify(this.usuario))
                     .then(res => {
-                        this.errors.nome = ""
-                        this.errors.email = ""
-                        this.errors.senha = ""
-                        this.errors.confirmar_senha = ""
+                        this.usuario = {}
                         this.msg = res.data.msg
 
                         if (res.data.dados === null) {
