@@ -94,12 +94,12 @@ export default {
             if (this.validarCampos()) {
                 axios.post("https://www.taskmanager.targetbr.biz/index.php/usuario", JSON.stringify(this.usuario))
                     .then(res => {
-                        this.usuario = {}
                         this.msg = res.data.msg
 
                         if (res.data.dados === null) {
                             this.condicao = false
                         } else {
+                            this.usuario = {}
                             this.condicao = true
                         }
                     })
