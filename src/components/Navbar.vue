@@ -43,6 +43,10 @@ nav {
     color: #fff;
 }
 
+.link-logo:visited {
+    color: #fff;
+}
+
 .link {
     display: flex;
     flex-direction: row;

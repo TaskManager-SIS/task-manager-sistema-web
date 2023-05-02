@@ -64,7 +64,7 @@ export default {
     },
     methods: {
         validarCampos() {
-            this.errors = {}; 
+            this.errors = {};
 
             if (!this.usuario.nome) {
                 this.errors.nome = "Informe seu nome";
