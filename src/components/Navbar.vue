@@ -29,6 +29,7 @@ export default {
 </script>
 
 <style scoped>
+
 nav {
     background-color: #012030;
     padding: 15px 50px;
@@ -37,7 +38,8 @@ nav {
     justify-content: space-between;
 }
 
-.link-logo:hover {
+.link-logo:hover,
+.link-logo:visited {
     color: #fff;
 }
 
@@ -91,4 +93,5 @@ nav a {
         justify-content: center;
     }
 }
+
 </style>
