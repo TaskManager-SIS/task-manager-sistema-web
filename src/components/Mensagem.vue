@@ -29,4 +29,5 @@ export default {
     justify-content: right;
     align-items: right;
 }
+
 </style>

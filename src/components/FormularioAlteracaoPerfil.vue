@@ -4,45 +4,43 @@
             :class="{ 'background-green': condicao, 'background-red': !condicao }" />
     </div>
     <div class="container">
-        <div class="formulario-cadastro-usuario mt-5">
-            <form @submit.prevent="cadastrarUsuario">
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <label for="nome">Nome<span class="campo-obrigatorio"> * </span></label>
-                        <input type="text" class="form-control" id="nome" name="nome" v-model="usuario.nome"
-                            placeholder="Digite o seu nome">
-                        <small v-if="errors.nome" class="form-text texto-validacao">{{ errors.nome }}</small>
-                    </div>
+        <form class="formulario-alteracao-perfil" @submit.prevent="salvarAlteracao()">
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label for="nome">Nome<span class="campo-obrigatorio"> * </span></label>
+                    <input type="text" class="form-control" id="nome" name="nome" v-model="usuario.nome"
+                        placeholder="Digite o seu nome">
+                    <small v-if="errors.nome" class="form-text texto-validacao">{{ errors.nome }}</small>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <label for="email">E-mail<span class="campo-obrigatorio"> * </span></label>
-                        <input type="" class="form-control" id="email" name="email" v-model="usuario.email"
-                            placeholder="Digite o seu email">
-                        <small v-if="errors.email" class="form-text texto-validacao">{{ errors.email }}</small>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label for="email">E-mail<span class="campo-obrigatorio"> * </span></label>
+                    <input type="" class="form-control" id="email" name="email" v-model="usuario.email"
+                        placeholder="Digite o seu email">
+                    <small v-if="errors.email" class="form-text texto-validacao">{{ errors.email }}</small>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <label for="senha">Senha<span class="campo-obrigatorio"> * </span></label>
-                        <input type="password" class="form-control" id="senha" name="senha" v-model="usuario.senha"
-                            placeholder="Digite a sua senha">
-                        <small v-if="errors.senha" class="form-text texto-validacao">{{ errors.senha }}</small>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label for="senha">Senha<span class="campo-obrigatorio"> * </span></label>
+                    <input type="password" class="form-control" id="senha" name="senha" v-model="usuario.senha"
+                        placeholder="Digite a sua senha">
+                    <small v-if="errors.senha" class="form-text texto-validacao">{{ errors.senha }}</small>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <label for="confirmar-senha">Confirmar senha<span class="campo-obrigatorio"> * </span></label>
-                        <input type="password" class="form-control" id="confirmar-senha" name="confirmar-senha"
-                            v-model="usuario.confirmar_senha" placeholder="Confirme a sua senha">
-                        <small v-if="errors.confirmar_senha" class="form-text texto-validacao">
-                            {{ errors.confirmar_senha }}
-                        </small>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label for="confirmar-senha">Confirmar senha<span class="campo-obrigatorio"> * </span></label>
+                    <input type="password" class="form-control" id="confirmar-senha" name="confirmar-senha"
+                        v-model="usuario.confirmar_senha" placeholder="Confirme a sua senha">
+                    <small v-if="errors.confirmar_senha" class="form-text texto-validacao">
+                        {{ errors.confirmar_senha }}
+                    </small>
                 </div>
-                <input class="btn-registrar" type="submit" value="Registrar">
-            </form>
-        </div>
+            </div>
+            <input class="btn-salvar mt-3" type="submit" value="Salvar">
+        </form>
     </div>
 </template>  
 
@@ -52,7 +50,7 @@ import axios from 'axios'
 import Mensagem from './Mensagem.vue'
 
 export default {
-    name: "FormularioCadastroUsuario",
+    name: "FormularioAlteracaoPerfil",
     components: {
         Mensagem
     },
@@ -73,6 +71,9 @@ export default {
             msg: "",
             condicao: ""
         }
+    },
+    mounted() {
+        this.buscarPerfil()
     },
     methods: {
         validarCampos() {
@@ -102,12 +103,18 @@ export default {
 
             return Object.keys(this.errors).length === 0;
         },
-        cadastrarUsuario() {
+        buscarPerfil() {
+            var usuarioLogado = JSON.parse(sessionStorage.getItem('usuario'))
+            this.usuario.nome = usuarioLogado.nome
+            this.usuario.email = usuarioLogado.email
+            this.usuario.ativo = true
+        },
+        salvarAlteracao() {
             if (this.validarCampos()) {
-                axios.post("https://www.taskmanager.targetbr.biz/index.php/usuario", JSON.stringify(this.usuario))
+                axios.put("https://www.taskmanager.targetbr.biz/index.php/usuario", JSON.stringify(this.usuario))
                     .then(res => {
                         this.msg = res.data.msg
-
+                        console.log(res)
                         if (res.data.dados === null) {
                             this.condicao = false
                         } else {
@@ -121,7 +128,7 @@ export default {
             var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(email);
         }
-    },
+    }
 }
 
 </script>
@@ -130,8 +137,11 @@ export default {
 
 .container {
     display: flex;
-    align-items: center;
     justify-content: center;
+}
+
+.form-group {
+    margin-bottom: 3%;
 }
 
 .mensagem {
@@ -146,7 +156,7 @@ export default {
     color: red;
 }
 
-.formulario-cadastro-usuario {
+.formulario-alteracao-perfil {
     background-color: #fff;
     padding: 20px;
     border-radius: 4px;
@@ -161,29 +171,30 @@ export default {
     background-color: #E74C3C;
 }
 
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #012030;
+}
+
 input {
     background-color: #E7E7E7;
     border: none;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.form-group {
-    margin-bottom: 3%;
-}
-
-.btn-registrar {
-    width: 100%;
+.btn-salvar {
+    text-transform: uppercase;
     font-weight: bold;
     padding: 10px;
-    margin-top: 40px;
+    width: 100%;
     color: #fff;
     background-color: #012030;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    text-transform: uppercase;
 }
 
 @media only screen and (max-width: 500px) {
-    .formulario-cadastro-usuario {
+    .formulario-alteracao-perfil {
         width: 90%;
         padding: 20px;
     }
