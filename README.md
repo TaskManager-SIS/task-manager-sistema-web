@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # front-end-task-manager
+=======
+# front-end-sistema-web
+>>>>>>> lucas
 
 ## Project setup
 ```
@@ -15,10 +19,13 @@ npm run serve
 npm run build
 ```
 
+<<<<<<< HEAD
 ### Lints and fixes files
 ```
 npm run lint
 ```
 
+=======
+>>>>>>> lucas
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

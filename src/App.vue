@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <img alt="Vue logo" src="./assets/logo.png">
   <HelloWorld msg="Welcome to Your Vue.js App"/>
 </template>
@@ -24,3 +25,15 @@ export default {
   margin-top: 60px;
 }
 </style>
+=======
+  <router-view />
+</template>
+
+<script>
+
+export default {
+  name: 'App',
+}
+
+</script>
+>>>>>>> lucas
