@@ -24,10 +24,6 @@ export default {
     font-weight:400;
     border: none;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: row;
-    justify-content: right;
-    align-items: right;
 }
 
 </style>

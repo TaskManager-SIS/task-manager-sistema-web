@@ -1,84 +1,138 @@
 <template>
     <div class="login">
-        <div class="container formulario-com-titulo">
-            <div class="titulo-tela align-middle">
+        <div class="container">
+            <div class="titulo-tela">
                 <img :src="logo" width="50" height="50" class="logo">
                 <h1>Task<span class="titulo-parcial">Manager</span></h1>
             </div>
-            <form class="formulario-login mt-3" @submit.prevent="logar">
-                <div class="row">
-                    <div class="col-md-12 form-group">
+            <div class="formulario-login">
+                <div class="mensagem">
+                    <Mensagem v-if="mostrarMensagemErro" :msg="msgErro" class="mensagem-erro" />
+                </div>
+                <form @submit.prevent="logar">
+                    <div class="form-group">
                         <label for="email">E-mail</label>
-                        <input type="email" class="form-control" id="email" name="email" v-model="usuario.email"
+                        <input type="text" class="form-control" id="email" name="email" v-model.trim="usuario.email"
                             placeholder="Digite o seu email">
+                        <small v-if="errors.email" class="form-text texto-validacao">{{ errors.email }}</small>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 form-group">
+                    <div class="form-group">
                         <label for="senha">Senha</label>
-                        <input type="password" class="form-control" id="senha" name="senha" v-model="usuario.senha"
+                        <input type="password" class="form-control" id="senha" name="senha" v-model.trim="usuario.senha"
                             placeholder="Digite a sua senha">
+                        <small v-if="errors.senha" class="form-text texto-validacao">{{ errors.senha }}</small>
                     </div>
-                </div>
-                <input class="btn-entrar mt-5" type="submit" value="ENTRAR">
-                <span class="link-para-cadastro">Ainda não está cadastrado? <router-link to="/cadastroUsuario"
-                        class="link-registrar">Clique aqui e
-                        registre-se.</router-link></span>
-            </form>
+                    <button type="submit" class="btn-entrar mt-5 mb-2">Entrar</button>
+                    <p class="link-para-cadastro">
+                        Ainda não está cadastrado?
+                        <router-link to="/cadastroUsuario" class="link-registrar">Clique aqui e registre-se.</router-link>
+                    </p>
+                </form>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 
+import Mensagem from '@/components/Mensagem.vue';
 import axios from 'axios';
 
 export default {
-    name: 'Login',
+    name: "Login",
+    components: { Mensagem },
     data() {
         return {
             usuario: {
                 email: "",
                 senha: ""
             },
-            logo: '/assets/img/task-manager-logo.png'
+            errors: {},
+            msgErro: "",
+            logo: "/assets/img/task-manager-logo.png"
+        };
+    },
+    computed: {
+        mostrarMensagemErro() {
+            return this.msgErro === 'E-mail ou senha incorretos';
         }
     },
     methods: {
+        validarEmail(email) {
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        },
+        validarCampos() {
+            this.errors = {};
+
+            if (!this.usuario.email) {
+                this.errors.email = "Informe seu e-mail";
+            } else if (!this.validarEmail(this.usuario.email)) {
+                this.errors.email = "Informe um e-mail válido";
+            }
+
+            if (!this.usuario.senha) {
+                this.errors.senha = "Informe sua senha";
+            }
+
+            return Object.keys(this.errors).length === 0;
+        },
         logar() {
-            axios.post('https://www.taskmanager.targetbr.biz/index.php/usuario/buscar-pelo-email-e-senha', JSON.stringify(this.usuario))
-                .then(res => {
-                    if (res.data.msg === "Usuário encontrado com sucesso!" && res.data.dados.ativo === true) {
-                        sessionStorage.setItem('autenticado', true);
-                        sessionStorage.setItem('usuario', JSON.stringify(res.data.dados));
-                        this.$router.push('/home');
-                    } else {
-                        alert('Usuário não encontrado!')
-                    }
-                }).catch(error => {
-                    console.error(error);
-                })
+            if (this.validarCampos()) {
+                console.log(JSON.stringify(this.usuario))
+                axios.post("https://www.taskmanager.targetbr.biz/index.php/usuario/buscar-pelo-email-e-senha", JSON.stringify(this.usuario))
+                    .then(res => {
+                        console.log(res)
+                        const dados = res.data.dados;
+                        if (res.data.msg === "Usuário encontrado com sucesso!" && dados.ativo) {
+                            sessionStorage.setItem("autenticado", true);
+                            sessionStorage.setItem("usuario", JSON.stringify(dados));
+                            this.$router.push("/home");
+                        } else {
+                            this.msgErro = 'E-mail ou senha incorretos';
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
         }
     }
-}
+};
 
 </script>
 
 <style scoped>
-.manager {
-    color: #fff;
+.login {
+    background-color: #0B384F;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.link-registrar {
-    color: #13678A;
-    font-weight: bold;
+.formulario-login {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.mensagem {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.mensagem-erro {
+    background-color: #E74C3C;
 }
 
 .titulo-tela {
     display: flex;
-    justify-items: center;
     justify-content: center;
     color: #13678A;
+    margin-bottom: 20px;
 }
 
 .logo {
@@ -97,23 +151,6 @@ export default {
     margin-bottom: 3%;
 }
 
-.login {
-    background-color: #0B384F;
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.formulario-login {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 4px;
-    max-width: 400px;
-    margin: 0 auto;
-}
-
 label {
     font-weight: bold;
     margin-bottom: 5px;
@@ -127,7 +164,7 @@ input {
 }
 
 .btn-entrar {
-    font-weight: bold;
+    text-transform: uppercase;
     padding: 10px;
     width: 100%;
     color: #fff;
@@ -136,8 +173,17 @@ input {
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.link-registrar {
+    color: #13678A;
+    font-weight: bold;
+}
+
+.texto-validacao {
+    color: red;
+}
+
 @media only screen and (max-width: 500px) {
-    .form-logo {
+    .container {
         width: 90%;
         padding: 20px;
     }

@@ -1,6 +1,6 @@
 <template>
     <NavbarAplicacao />
-    <h1 class="titulo-tela mb-5 mt-5">Perfil</h1>
+    <h1 class="titulo-tela mb-3 mt-5">Perfil</h1>
     <FormularioAlteracaoPerfil />
 </template>
 

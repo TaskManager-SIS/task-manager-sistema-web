@@ -40,7 +40,7 @@
                         </small>
                     </div>
                 </div>
-                <input class="btn-registrar" type="submit" value="Registrar">
+                <input class="btn-registrar mt-3" type="submit" value="Registrar">
             </form>
         </div>
     </div>
@@ -141,6 +141,10 @@ export default {
     align-items: right;
 }
 
+label {
+    color: #012030;
+}
+
 .texto-validacao,
 .campo-obrigatorio {
     color: red;
@@ -148,8 +152,8 @@ export default {
 
 .formulario-cadastro-usuario {
     background-color: #fff;
-    padding: 20px;
-    border-radius: 4px;
+    padding: 2%;
+    border-radius: 1%;
     width: 40%;
 }
 
@@ -174,8 +178,7 @@ input {
 .btn-registrar {
     width: 100%;
     font-weight: bold;
-    padding: 10px;
-    margin-top: 40px;
+    padding: 4%;
     color: #fff;
     background-color: #012030;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
