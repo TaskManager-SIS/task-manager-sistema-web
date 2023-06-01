@@ -1,6 +1,11 @@
 .body {
-    background-color: #DAFDBA;
     font-family: 'Roboto', sans-serif;
+    width: 100%;
+    height: 100vh;
+    background-color: #DAFDBA;
+}
+
+#app {
     width: 100%;
     height: 100vh;
 }
